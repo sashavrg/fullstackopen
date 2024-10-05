@@ -8,7 +8,6 @@ const Header = (props) => {
 }
 
 
-
 const Part = (props) => {
   console.log(props)
   return (
@@ -115,5 +114,6 @@ const App = () => {
     </>
   )
 }
+*/
 
 export default App
