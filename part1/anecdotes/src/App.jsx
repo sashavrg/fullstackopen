@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { c } from 'vite/dist/node/types.d-aGj9QkWt'
 
 const Anecdote = ({ anecdotes }) => <div>{anecdotes}</div>
 
@@ -18,16 +17,31 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Array(anecdotes.length).fill(0))
 
+  const generateRandom = () => Math.floor(Math.random() * anecdotes.length)
 
+  const selectRandom = () => setSelected(generateRandom)
+  console.log("array index selected :", selected)
 
-  const selectRandom = () => 
-    setSelected(generateRandom)
+  const maxVotes = Math.max(...points);
+  const maxIndex = points.indexOf(maxVotes);
+
+  const vote = () => {
+    const copy = [ ...points ]
+    copy[selected] += 1
+    setPoints(copy)
+    console.log("Points :", points)
+}
 
   return (
     <div>
-      <Button onClick={selectRandom} text={'generate anecdote'}/>
-      <Anecdote anecdotes={anecdotes[setSelected]}/>
+      <h1>Anecdote of the day</h1>
+      <Anecdote anecdotes={anecdotes[selected]}/>
+      <Button onClick={vote} text={'vote'}/>
+      <Button onClick={selectRandom} text={'next anecdote'}/>
+      <h1>Anecdote with most votes</h1>
+      <Anecdote anecdotes={anecdotes[maxIndex]} />
     </div>
   )
 }
