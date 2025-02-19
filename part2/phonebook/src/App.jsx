@@ -1,19 +1,16 @@
-import { useState } from 'react';
+import { useState } from 'react'
+import Person from './components/Person'
 
-const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-    ])
+
+const App = (props) => {
+  const [persons, setPersons] = useState(props.persons)
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchInput, setSearchInput] = useState('')
 
   const addPerson = (event) => {
     event.preventDefault()
-    const nameExists = persons.some(person => person.name.toLowerCase === newName.toLowerCase)
+    const nameExists = persons.some(person => person.name.toLowerCase() === newName.toLowerCase())
     const numberExists = persons.some(person => person.number === newNumber)
 
     if (nameExists) {
@@ -82,7 +79,7 @@ const App = () => {
       <h2>Numbers</h2>
       <ul>
         {personsToShow.map(person =>
-          <li key={person.id}>{person.name} {person.number}</li>
+          <Person key={person.id} name={person.name} number={person.number}/>
         )}
       </ul>
     </div>
