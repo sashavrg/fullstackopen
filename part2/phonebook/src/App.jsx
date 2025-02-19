@@ -4,22 +4,29 @@ const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', id: 1 }
   ]);
-  const [newName, setNewName] = useState('');
+  const [newName, setNewName] = useState('')
 
   const addPerson = (event) => {
-    event.preventDefault();
+    const nameExists = persons.some(person => person.name === newName)
+
+    if (nameExists) {
+      window.alert(`${newName} has already been added to the phonebook!`)
+    } else {
+      event.preventDefault()
     const personObject = {
       name: newName,
-      id: persons.length + 1, // Simple ID generation
+      id: String(persons.length + 1),
     };
 
-    setPersons(persons.concat(personObject));
-    setNewName('');
-  };
+    setPersons(persons.concat(personObject))
+    setNewName('')
+  }
+}
 
   const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  };
+    setNewName(event.target.value)
+  }
+
 
   return (
     <div>
@@ -39,7 +46,6 @@ const App = () => {
           <li key={person.id}>{person.name}</li>
         )}
       </ul>
-      <div>debug: {newName}</div>
     </div>
   );
 };
