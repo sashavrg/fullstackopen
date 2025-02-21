@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Person from './components/Person'
+import AddPersonForm from './components/AddPersonForm'
+import SearchFilter from './components/SearchFilter'
 
 
 const App = (props) => {
@@ -31,6 +33,7 @@ const App = (props) => {
   }
 }
 
+
   const handleSearchChange = (event) => {
     setSearchInput(event.target.value)
   }
@@ -52,30 +55,16 @@ const App = (props) => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <div>
-          filter shown with <input
-          value={searchInput}
-          onChange={handleSearchChange}
-          />
-        </div>
-      </form>
+      <SearchFilter
+        searchInput={searchInput}
+        handleSearchChange={handleSearchChange}/>
       <h2>Add new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input
-            value={newName}
-            onChange={handleNameChange}
-          />
-        </div>
-        <div>
-          number: <input
-            value={newNumber}
-            onChange={handleNumberChange}
-          />
-        </div>
-        <button type="submit">add</button>
-      </form>
+      <AddPersonForm
+        newName={newName}
+        newNumber={newNumber}
+        addPerson={addPerson}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
       <ul>
         {personsToShow.map(person =>
@@ -86,4 +75,4 @@ const App = (props) => {
   )
 }
 
-export default App;
+export default App
