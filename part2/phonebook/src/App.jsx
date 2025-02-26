@@ -54,7 +54,19 @@ const App = (props) => {
   }
 }
 
-
+const deletePerson = (id) => {
+  if (window.confirm(`Are you sure you want to delete ${persons.find(person => person.id === id).name}'s contact?`)) {
+    personsService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
+      .catch(error => {
+        alert(
+          `The person was already deleted`, error)
+      })
+  }
+}
   const handleSearchChange = (event) => {
     setSearchInput(event.target.value)
   }
@@ -89,7 +101,13 @@ const App = (props) => {
       <h2>Numbers</h2>
       <ul>
         {personsToShow.map(person =>
-          <Person key={person.id} name={person.name} number={person.number}/>
+           <Person
+           key={person.id}
+           id={person.id}
+           name={person.name}
+           number={person.number}
+           deletePerson={deletePerson}
+         />
         )}
       </ul>
     </div>
