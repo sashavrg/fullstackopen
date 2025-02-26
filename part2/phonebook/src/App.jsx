@@ -26,11 +26,37 @@ const App = (props) => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const nameExists = persons.some(person => person.name.toLowerCase() === newName.toLowerCase())
+    const existingPerson = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
     const numberExists = persons.some(person => person.number === newNumber)
 
-    if (nameExists) {
-      window.alert(`${newName} has already been added to the phonebook!`)
+    if (existingPerson) {
+      //check if number is already associated with the same person
+      if (existingPerson.number === newNumber) {
+        window.alert(`${newName} already has the number ${newNumber} associated! No changes made.`)
+      return
+    }
+
+
+    //if person exists, but number is different, ask if user wants to update number
+    const confirmUpdate = window.confirm(
+      `${newName} is already in the phonebook. Do you want to update the number?`
+    )
+
+    if (confirmUpdate) {
+      const updatedPerson  = { ...existingPerson, number: newNumber }
+
+      personsService
+        .update(existingPerson.id, updatedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person =>
+            person.id === existingPerson.id ? returnedPerson : person
+          ))
+          setNewName('')
+          setNewNumber('')
+        })
+    }
+
+
     } else if (numberExists) {
       window.alert(`${newNumber} has already been added to the phonebook!`)
     } else {
