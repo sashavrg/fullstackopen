@@ -1,15 +1,18 @@
 import { useState, useEffect } from 'react'
+
 import personsService from './services/persons'
+
 import Person from './components/Person'
 import AddPersonForm from './components/AddPersonForm'
 import SearchFilter from './components/SearchFilter'
-
+import Notification from './components/Notification'
 
 const App = (props) => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchInput, setSearchInput] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     console.log('effect')
@@ -53,6 +56,10 @@ const App = (props) => {
           ))
           setNewName('')
           setNewNumber('')
+          setNotificationMessage(`Succesfully updated ${existingPerson.name}'s number!`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+        }, 5000)
         })
     }
 
@@ -74,6 +81,10 @@ const App = (props) => {
         setPersons(persons.concat(personObject))
         setNewName('')
         setNewNumber('')
+        setNotificationMessage(`Succesfully added ${personObject.name}!`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
       })
 
     
@@ -114,6 +125,7 @@ const deletePerson = (id) => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage}/>
       <SearchFilter
         searchInput={searchInput}
         handleSearchChange={handleSearchChange}/>
