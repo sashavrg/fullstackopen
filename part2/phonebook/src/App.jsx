@@ -13,6 +13,7 @@ const App = (props) => {
   const [newNumber, setNewNumber] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState(null)
 
   useEffect(() => {
     console.log('effect')
@@ -56,10 +57,23 @@ const App = (props) => {
           ))
           setNewName('')
           setNewNumber('')
-          setNotificationMessage(`Succesfully updated ${existingPerson.name}'s number!`)
+          setNotificationMessage(
+            `Succesfully updated ${existingPerson.name}'s number!`
+          )
+          setNotificationType('success')
           setTimeout(() => {
             setNotificationMessage(null)
         }, 5000)
+        })
+        .catch(error => {
+          setNotificationMessage(
+            `Information of ${existingPerson.name} has already been removed from the server`, error
+          )
+          setNotificationType('error')
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+          setPersons(persons.filter(person => person.id !== existingPerson.id))
         })
     }
 
@@ -81,7 +95,10 @@ const App = (props) => {
         setPersons(persons.concat(personObject))
         setNewName('')
         setNewNumber('')
-        setNotificationMessage(`Succesfully added ${personObject.name}!`)
+        setNotificationMessage(
+          `Succesfully added ${personObject.name}!`
+        )
+        setNotificationType('success')
         setTimeout(() => {
           setNotificationMessage(null)
         }, 5000)
@@ -91,16 +108,31 @@ const App = (props) => {
   }
 }
 
+//delete person
 const deletePerson = (id) => {
   if (window.confirm(`Are you sure you want to delete ${persons.find(person => person.id === id).name}'s contact?`)) {
     personsService
       .remove(id)
       .then(() => {
         setPersons(persons.filter(person => person.id !== id))
+        setNotificationMessage(
+          `Succesfully deleted ${persons.find(person => person.id === id).name}!`
+        )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }
+        , 5000)
       })
       .catch(error => {
-        alert(
-          `The person was already deleted`, error)
+        setNotificationMessage(
+          `${persons.find(person => person.id === id).name} has already been removed from the server`, error
+        )
+        setNotificationType('error')
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }
+        , 5000)
+          setPersons(persons.filter(person => person.id !== id))
       })
   }
 }
@@ -125,7 +157,7 @@ const deletePerson = (id) => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage}/>
+      <Notification message={notificationMessage} notificationType={notificationType}/>
       <SearchFilter
         searchInput={searchInput}
         handleSearchChange={handleSearchChange}/>
