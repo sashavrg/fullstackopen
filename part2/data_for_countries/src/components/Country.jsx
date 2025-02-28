@@ -1,8 +1,11 @@
-const Country = ({ name, id }) => {
+const Country = ({id, name, handleShowDetails, isExpanded }) => {
   return (
-    <li>
-      {name.common}
-    </li>
+    <div>
+      {name.common} {' '}
+      <button onClick={() => handleShowDetails(id)}>
+        {isExpanded ? 'Hide' : 'Expand'}
+      </button>
+    </div>
   )
 }
 
