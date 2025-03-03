@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import countriesService from './services/countries'
+import weatherService from './services/weather'
 import SearchFilter from './components/SearchFilter'
 import CountriesList from './components/CountriesList'
 
@@ -7,16 +8,39 @@ function App() {
   const [countries, setCountries] = useState([])
   const [searchInput, setSearchInput] = useState('')
   const [expandedCountryId, setExpandedCountryId] = useState(null)
+  const [weatherData, setWeatherData] = useState(null)
 
+
+  //fetch all countries
   useEffect(() => {
-    console.log('effect')
+    console.log('countries effect')
     countriesService
       .getAll()
       .then(initialCountries => {
-        console.log('prophecy fulfilled')
+        console.log('country prophecy fulfilled')
         setCountries(initialCountries)
       })
   }, [])
+
+  //fetch weather data
+  useEffect(() => {
+    console.log('weather effect')
+    if (expandedCountryId) {
+      const country = countries.find(country => country.ccn3 === expandedCountryId)
+      const cityName = country.capital[0] // capital city for each country is passed as an array and we need a string for the API request
+      console.log('cityName', cityName)
+      weatherService
+        .getWeatherByCityName(cityName)
+        .then(data => {
+          console.log('weather data', data)
+          setWeatherData(data)
+        })
+        .catch(error => {
+          console.error('Error fetching weather data', error)
+        })
+    }
+  }
+  , [expandedCountryId, countries])
 
   const handleSearchChange = (event) => {
     setSearchInput(event.target.value)
@@ -44,6 +68,7 @@ function App() {
         limit={limit}
         expandedCountryId={expandedCountryId}
         handleShowDetails={handleShowDetails}
+        weatherData={weatherData}
       />
     </>
   )

@@ -3,13 +3,13 @@ import CountryDetails from "./CountryDetails"
 
 
 
-const CountriesList = ({ countries, limit, expandedCountryId, handleShowDetails }) => {
+const CountriesList = ({ countries, limit, expandedCountryId, handleShowDetails, weatherData, weatherIcon}) => {
   if (countries.length === 0) {
     return <p>No countries found</p>
   }
 
   if (countries.length === 1) {
-    return <CountryDetails country={countries[0]} />
+    return <CountryDetails country={countries[0]} weatherData={weatherData} weatherIcon={weatherIcon}/>
   }
 
   return (
@@ -24,9 +24,12 @@ const CountriesList = ({ countries, limit, expandedCountryId, handleShowDetails 
               name={country.name}
               handleShowDetails={handleShowDetails}
               isExpanded={expandedCountryId === country.ccn3}
+              weatherIcon={weatherIcon}
             />
             {expandedCountryId === country.ccn3 && (
-              <CountryDetails country={country} />
+              <CountryDetails
+              country={country}
+              weatherData={weatherData}/>
             )}
           </li>
         ))
