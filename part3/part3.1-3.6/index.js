@@ -30,7 +30,6 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  console.log(id)
   const person = persons.find(person => person.id === id)
 
   if (person) {
@@ -48,6 +47,12 @@ app.get('/api/info', (request, response) => {
 
   const info = `Phonebook has info for ${maxId} people.<br>${new Date()}`
   response.type('text/html').send(info)
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  persons = persons.filter(person => person.id !== id)
+  response.status(204).end()
 })
 
 const PORT = 3001
