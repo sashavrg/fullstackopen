@@ -28,17 +28,9 @@ app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
-app.get('/api/info', (request, response) => {
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(n => Number(n.id)))
-    : 0
-
-  const info = `Phonebook has info for ${maxId} people.<br>${new Date()}`
-  response.type('text/html').send(info)
-})
-
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
+  console.log(id)
   const person = persons.find(person => person.id === id)
 
   if (person) {
@@ -47,6 +39,15 @@ app.get('/api/persons/:id', (request, response) => {
     response.statusMessage = "Contact not found"
     response.status(404).end()
   }
+})
+
+app.get('/api/info', (request, response) => {
+  const maxId = persons.length > 0
+    ? Math.max(...persons.map(n => Number(n.id)))
+    : 0
+
+  const info = `Phonebook has info for ${maxId} people.<br>${new Date()}`
+  response.type('text/html').send(info)
 })
 
 const PORT = 3001
