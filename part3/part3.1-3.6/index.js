@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
   { 
     "id": "1",
@@ -24,6 +26,14 @@ let persons = [
   }
 ]
 
+const generateId = () => {
+  let newId
+  do {
+    newId = Math.floor(Math.random() * 1024)
+  } while (persons.some(person => person.id === String(newId)))
+  return String(newId)
+}
+
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
@@ -41,12 +51,35 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.get('/api/info', (request, response) => {
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(n => Number(n.id)))
-    : 0
-
+  const maxId = persons.length
   const info = `Phonebook has info for ${maxId} people.<br>${new Date()}`
   response.type('text/html').send(info)
+})
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (!body.name) {
+    return response.status(400).json({
+      error: 'Contact name missing!'
+    })
+  }
+
+  if (!body.number) {
+    return response.status(400).json({
+      error: 'Contact phone number missing!'
+    })
+  }
+
+  const person = {
+    name : body.name,
+    number : body.number,
+    id : generateId(),
+  }
+
+  persons = persons.concat(person)
+
+  response.json(person)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
