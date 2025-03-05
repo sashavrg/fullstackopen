@@ -1,7 +1,7 @@
 const express = require('express')
-const app = express()
+const morgan = require('morgan')
 
-app.use(express.json())
+const app = express()
 
 let persons = [
   { 
@@ -25,6 +25,22 @@ let persons = [
     "number": "39-23-6423122"
   }
 ]
+
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:', request.path)
+  console.log('Body', request.body)
+  console.log('---')
+  next()
+}
+
+app.use(express.json())
+app.use(requestLogger)
+app.use(morgan('tiny'))
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
 
 const generateId = () => {
   let newId
@@ -77,7 +93,7 @@ app.post('/api/persons', (request, response) => {
       error: 'Contact name must be unique!'
     })
   }
-  
+
   const person = {
     name : body.name,
     number : body.number,
