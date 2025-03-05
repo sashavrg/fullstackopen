@@ -36,7 +36,10 @@ const requestLogger = (request, response, next) => {
 
 app.use(express.json())
 app.use(requestLogger)
-app.use(morgan('tiny'))
+
+morgan.token('body', (req, res) => JSON.stringify(req.body))
+
+app.use(morgan(':method :url :status :res[content-legth] - :response-time ms :body'))
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
