@@ -10,7 +10,7 @@ const name = process.argv[3]
 const number = process.argv[4]
 
 
-const url = `mongodb+srv://sashavergolini:${password}@fullstackopenphonebook.pgyna.mongodb.net/?retryWrites=true&w=majority&appName=FullstackopenPhonebook`
+const url = `mongodb+srv://sashavergolini:${password}@fullstackopenphonebook.pgyna.mongodb.net/PhoneBook?retryWrites=true&w=majority&appName=FullstackopenPhonebook`
 
 mongoose.set('strictQuery', false)
 
