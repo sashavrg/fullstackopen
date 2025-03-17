@@ -1,21 +1,9 @@
 require('dotenv').config()
-
 const express = require('express')
-const mongoose = require('mongoose')
 const Person = require('./models/person')
 const morgan = require('morgan')
 
 const app = express()
-
-//middleware
-
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:', request.path)
-  console.log('Body', request.body)
-  console.log('---')
-  next()
-}
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
@@ -24,21 +12,11 @@ const unknownEndpoint = (request, response) => {
 
 app.use(express.static('dist'))
 app.use(express.json())
-app.use(requestLogger)
-//app.use(unknownEndpoint)
 
 morgan.token('body', (req, res) => JSON.stringify(req.body))
-
 app.use(morgan(':method :url :status :res[content-legth] - :response-time ms :body'))
 
-/*const generateId = () => {
-  let newId
-  do {
-    newId = Math.floor(Math.random() * 1024)
-  } while (persons.some(person => person.id === String(newId)))
-  return String(newId)
-}
-*/
+//routing
 
 app.get('/api/persons', (request, response) => {
   Person.find({})
@@ -103,10 +81,14 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  persons = persons.filter(person => person.id !== id)
-  response.status(204).end()
+  Person.findByIdAndDelete(request.params.id)
+    .then(() => {
+      response.status(204).end()
+    })
 })
+
+
+app.use(unknownEndpoint)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
