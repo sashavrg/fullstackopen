@@ -61,15 +61,6 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  /*const nameExists = persons.some(person => person.name === body.name)
-  if (nameExists) {
-    return response.status(400).json({
-      error: 'Contact name must be unique!'
-    })
-  }
-
-  */
-
   const person = new Person ({
     name : body.name,
     number : body.number,
@@ -85,6 +76,25 @@ app.delete('/api/persons/:id', (request, response) => {
     .then(() => {
       response.status(204).end()
     })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, {new: true})
+    .then(updatePerson => {
+      if (updatePerson) {
+        response.json(updatePerson)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 const errorHandler = (error, request, response, next) => {
