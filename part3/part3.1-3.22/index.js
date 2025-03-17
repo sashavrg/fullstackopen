@@ -87,8 +87,17 @@ app.delete('/api/persons/:id', (request, response) => {
     })
 })
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if(error.name === 'CastError') {
+    return response.status(400).send({message: 'malformatted ID'})
+  }
+  next(error)
+}
 
 app.use(unknownEndpoint)
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
