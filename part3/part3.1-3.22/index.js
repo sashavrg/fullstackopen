@@ -26,16 +26,19 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  const person = persons.find(person => person.id === id)
-
-  if (person) {
-    response.json(person)
-  } else {
-    response.statusMessage = "Contact not found"
-    response.status(404).end()
-  }
+app.get('/api/persons/:id', (request, response, post) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.statusMessage = "Person not found"
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      post(error)
+    })
 })
 
 app.get('/api/info', (request, response) => {
