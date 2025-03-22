@@ -32,7 +32,7 @@ app.get('/api/persons/:id', (request, response, post) => {
       if (person) {
         response.json(person)
       } else {
-        response.statusMessage = "Person not found"
+        response.statusMessage = 'Person not found'
         response.status(404).end()
       }
     })
@@ -42,8 +42,8 @@ app.get('/api/persons/:id', (request, response, post) => {
 })
 
 app.get('/api/info', (request, response) => {
-    Person.countDocuments({})
-      .then(count => {
+  Person.countDocuments({})
+    .then(count => {
       const info = `Phonebook has info for ${count} people.<br>${new Date()}`
       response.type('text/html').send(info)
       console.log('number of contacts:', count)})
@@ -72,7 +72,7 @@ app.post('/api/persons', (request, response, next) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -92,7 +92,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
   const opts = { runValidators: true }
 
-  Person.findByIdAndUpdate(request.params.id, person, {new: true}, opts)
+  Person.findByIdAndUpdate(request.params.id, person, { new: true }, opts)
     .then(updatePerson => {
       if (updatePerson) {
         response.json(updatePerson)
@@ -107,9 +107,9 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if(error.name === 'CastError') {
-    return response.status(400).send({message: 'malformatted ID'})
+    return response.status(400).send({ message: 'malformatted ID' })
   } else if (error.name === 'ValidationError') {
-    return response.status(400).json({message: error.message})
+    return response.status(400).json({ message: error.message })
   }
   next(error)
 }
