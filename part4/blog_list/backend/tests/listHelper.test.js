@@ -1,3 +1,4 @@
+var _ = require('lodash')
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
@@ -104,4 +105,19 @@ describe('blog with the most likes', () => {
     const result = listHelper.favouriteBlogTitle(listWithMultipleBlogs)
     assert.deepStrictEqual(result, 'Canonical string reduction')
   })
+})
+
+describe ('author with the most entries and number of entries', () => {
+  test ('of empty array is null', () => {
+    const result = listHelper.mostBlogs([])
+    assert.strictEqual(result, null)
+  })
+  test ('of list with only one blog equals the author name and the likes of that', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    assert.deepStrictEqual(result, { author: 'Edsger W. Dijkstra', blogs: 1 })
+  })
+  test ('of a bigger list is returned right', () => {
+    const result = listHelper.mostBlogs(listWithMultipleBlogs)
+    assert.deepStrictEqual(result, { author: "Robert C. Martin", blogs: 3 })
+  })  
 })
